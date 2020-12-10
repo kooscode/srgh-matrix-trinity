@@ -1,3 +1,9 @@
+/*
+	RGH PLUS for Trinity/Corona
+	By: b1ghamm3r [Dec 2020]
+	Credits: GliGli, 15432, Octal450, Mena
+*/
+
 `timescale 1ns / 1ps
 
 module hana_i2c_clk(
