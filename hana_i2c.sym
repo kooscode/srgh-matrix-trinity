@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<symbol version="7" name="hana_i2c">
+    <symboltype>BLOCK</symboltype>
+    <timestamp>2020-12-9T9:6:17</timestamp>
+    <attr value="hana_i2c" name="VeriModel" />
+    <pin polarity="Input" x="0" y="-32" name="clk_400k" />
+    <pin polarity="Input" x="0" y="-96" name="i2c_send" />
+    <pin polarity="Output" x="384" y="-96" name="i2c_sda_io" />
+    <pin polarity="Output" x="384" y="-32" name="i2c_scl_io" />
+    <graph>
+        <attrtext style="alignment:BCENTER;fontsize:56;fontname:Arial" attrname="SymbolName" x="192" y="-136" type="symbol" />
+        <rect width="256" x="64" y="-128" height="128" />
+        <attrtext style="fontsize:24;fontname:Arial" attrname="PinName" x="72" y="-32" type="pin clk_400k" />
+        <attrtext style="fontsize:24;fontname:Arial" attrname="PinName" x="72" y="-96" type="pin i2c_send" />
+        <line x2="0" y1="-32" y2="-32" x1="64" />
+        <line x2="0" y1="-96" y2="-96" x1="64" />
+        <attrtext style="alignment:RIGHT;fontsize:24;fontname:Arial" attrname="PinName" x="312" y="-96" type="pin i2c_sda_io" />
+        <line x2="384" y1="-96" y2="-96" x1="320" />
+        <line x2="384" y1="-32" y2="-32" x1="320" />
+        <attrtext style="alignment:RIGHT;fontsize:24;fontname:Arial" attrname="PinName" x="308" y="-32" type="pin i2c_scl_io" />
+    </graph>
+</symbol>

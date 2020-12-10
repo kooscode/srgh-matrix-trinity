@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<symbol version="7" name="main">
+    <symboltype>BLOCK</symboltype>
+    <timestamp>2020-12-9T20:44:38</timestamp>
+    <pin polarity="Input" x="64" y="63" name="C_clk" />
+    <pin polarity="Input" x="64" y="127" name="B_post" />
+    <pin polarity="Output" x="320" y="63" name="LED_dbg" />
+    <pin polarity="Output" x="320" y="127" name="E_i2c_scl" />
+    <pin polarity="Output" x="320" y="191" name="D_i2c_sda" />
+    <pin polarity="BiDirectional" x="320" y="255" name="A_cpu_reset" />
+    <graph>
+        <attrtext style="alignment:BCENTER;fontsize:56;fontname:Arial" attrname="SymbolName" x="192" y="-8" type="symbol" />
+        <attrtext style="fontsize:24;fontname:Arial" attrname="PinName" x="72" y="63" type="pin C_clk" />
+        <line x2="64" y1="63" y2="63" x1="64" />
+        <attrtext style="fontsize:24;fontname:Arial" attrname="PinName" x="72" y="127" type="pin B_post" />
+        <line x2="64" y1="127" y2="127" x1="64" />
+        <attrtext style="alignment:RIGHT;fontsize:24;fontname:Arial" attrname="PinName" x="312" y="63" type="pin LED_dbg" />
+        <line x2="320" y1="63" y2="63" x1="320" />
+        <attrtext style="alignment:RIGHT;fontsize:24;fontname:Arial" attrname="PinName" x="312" y="127" type="pin E_i2c_scl" />
+        <line x2="320" y1="127" y2="127" x1="320" />
+        <attrtext style="alignment:RIGHT;fontsize:24;fontname:Arial" attrname="PinName" x="312" y="191" type="pin D_i2c_sda" />
+        <line x2="320" y1="191" y2="191" x1="320" />
+        <attrtext style="alignment:RIGHT;fontsize:24;fontname:Arial" attrname="PinName" x="312" y="255" type="pin A_cpu_reset" />
+        <line x2="320" y1="255" y2="255" x1="320" />
+        <rect width="256" x="64" y="0" height="256" />
+    </graph>
+</symbol>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<symbol version="7" name="glitcher">
+    <symboltype>BLOCK</symboltype>
+    <timestamp>2020-12-9T3:42:39</timestamp>
+    <attr value="glitcher" name="VeriModel" />
+    <pin polarity="Input" x="0" y="-96" name="clk_96m" />
+    <pin polarity="BiDirectional" x="384" y="-96" name="cpu_reset" />
+    <pin polarity="Input" x="0" y="-32" name="glitch" />
+    <graph>
+        <attrtext style="alignment:BCENTER;fontsize:56;fontname:Arial" attrname="SymbolName" x="192" y="-136" type="symbol" />
+        <attrtext style="fontsize:24;fontname:Arial" attrname="PinName" x="72" y="-96" type="pin clk_96m" />
+        <attrtext style="alignment:RIGHT;fontsize:24;fontname:Arial" attrname="PinName" x="312" y="-96" type="pin cpu_reset" />
+        <line x2="384" y1="-96" y2="-96" x1="320" />
+        <line x2="4" y1="-96" y2="-96" x1="68" />
+        <rect width="256" x="64" y="-128" height="136" />
+        <attrtext style="fontsize:24;fontname:Arial" attrname="PinName" x="72" y="-32" type="pin glitch" />
+        <line x2="0" y1="-32" y2="-32" x1="64" />
+    </graph>
+</symbol>

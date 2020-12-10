@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<symbol version="7" name="hana_i2c_clk">
+    <symboltype>BLOCK</symboltype>
+    <timestamp>2020-12-9T6:41:28</timestamp>
+    <attr value="hana_i2c_clk" name="VeriModel" />
+    <pin polarity="Input" x="0" y="-32" name="clk_48m" />
+    <pin polarity="Output" x="448" y="-32" name="clk_400k" />
+    <graph>
+        <attrtext style="alignment:BCENTER;fontsize:56;fontname:Arial" attrname="SymbolName" x="224" y="-72" type="symbol" />
+        <rect width="320" x="64" y="-64" height="64" />
+        <attrtext style="fontsize:24;fontname:Arial" attrname="PinName" x="72" y="-32" type="pin clk_48m" />
+        <attrtext style="alignment:RIGHT;fontsize:24;fontname:Arial" attrname="PinName" x="376" y="-32" type="pin clk_400k" />
+        <line x2="0" y1="-32" y2="-32" x1="64" />
+        <line x2="448" y1="-32" y2="-32" x1="384" />
+    </graph>
+</symbol>

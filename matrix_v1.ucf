@@ -1,0 +1,22 @@
+# Matrix hardware pin configuration
+
+#** Note - 22k resistor between CPLD Pin 22 and Matrix Pad F
+ 
+NET "C_clk" 		LOC = "P29"	| IOSTANDARD = LVCMOS33; 
+NET "A_cpu_reset"	LOC = "P8"	| IOSTANDARD = LVCMOS18;// | SLEW=SLOW; 			
+NET "B_post"		LOC = "P40"	| IOSTANDARD = LVCMOS18 | SCHMITT_TRIGGER;
+NET "D_i2c_sda"	LOC = "P18"	| IOSTANDARD = LVCMOS33; 
+NET "E_i2c_scl"	LOC = "P19"	| IOSTANDARD = LVCMOS33; 
+# NET "F_pll_smc"	LOC = "P22" | IOSTANDARD = LVCMOS33;
+NET "LED_dbg" 		LOC = "P27"	| IOSTANDARD = LVCMOS33; 
+
+# == Some Chinese Matrix units use CP56 packaging ==
+# ==  but VQ44 or CP56 implements to same outcome ==
+
+# VQ44 Pin 29 = CP56 Pin C4
+# VQ44 Pin 8  = CP56 Pin H8
+# VQ44 Pin 40 = CP56 Pin F3
+# VQ44 Pin 18 = CP56 Pin D10
+# VQ44 Pin 19 = CP56 Pin E8
+# VQ44 Pin 22 = CP56 Pin A10
+# VQ44 Pin 27 = CP56 Pin C5
