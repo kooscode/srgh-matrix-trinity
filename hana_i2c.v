@@ -13,7 +13,9 @@ module hana_i2c(
 			 output i2c_scl_io
 			 );
 			 
-	`define slowdown_delays 30
+	// Slowdown can be delayed by 1ms intervals
+	// i.e. 30 = 30ms delay before slowdown is injected.
+	`define slowdown_delays 31
 
 	// i2c slowdown and speedup messages with clocks
 	// These i2c messages were compared with logic analyzer when SMC_DBG is asserted and de-asserted

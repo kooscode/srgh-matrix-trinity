@@ -15,13 +15,13 @@ module post_counter(
     );
 	 
 
-	// Post D8 (Calculate boot loader Hash) happens at Post pin 1 rise/fall count 10
+	// Rest at post count zero
 	`define Post_Zero 4'd0
 
-	// Post D8 (Calculate boot loader Hash) happens at Post pin 1 rise/fall count 10
+	// Post D8 (Decrypts boot loader and calculate Hash) happens at Post pin 1 rise/fall count 10
 	`define Post_Slowdown 4'd10
 
-	// Post DA (Validate boot loader Hash) happens at Post pin 1 rise/fall count 11
+	// Post DA (Validate boot loader hash) happens at Post pin 1 rise/fall count 11
 	`define Post_Glitch 4'd11
 
 	// If There was not RESET at this post count yet, SMC recorded Glitch SUCCESS!
@@ -29,6 +29,8 @@ module post_counter(
 
 	// post counter
 	reg [3:0] post_cnt;
+
+    //hook up LED to post bit 1 so it flashes on post counts.
 	assign led = postbit1;
 
 	// Register Initialization values
@@ -39,8 +41,7 @@ module post_counter(
 		post_cnt = 0;
 	end
 	
-	// B_Post is connected to the Post bus Pin 1
-	// This will just count posts 
+	// B_Post pad is connected to the Post bus Pin 1
 	always @(posedge postbit1 or negedge postbit1)
 	begin
 		// Only count posts when CPU RESET is HIGH
@@ -57,7 +58,7 @@ module post_counter(
 		end
 	end	
 
-	//process posts 
+	//process posts counts and slow down, glitch and speedup when needed. 
 	always @(post_cnt)
 	begin		
 	
