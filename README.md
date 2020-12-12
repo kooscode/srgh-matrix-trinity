@@ -1,2 +1,3 @@
-# srgh-plus-matrix
+# srgh-matrix-trinity
 
+WIP
