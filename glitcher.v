@@ -1,5 +1,5 @@
 /*
-	RGH PLUS for Trinity/Corona
+	S-RGH for Trinity
 	By: b1ghamm3r [Dec 2020]
 	Credits: GliGli, 15432, Octal450, Mena
 */
