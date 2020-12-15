@@ -28,12 +28,12 @@ So, you can alter the behaviour of a software system by manually injecting anoma
 
 ## How the XBOX 360 "Glitch" hack works
 
-High super level explanation of XBOX 360 boot process.
+Super High level explanation of XBOX 360 boot process.
 - The XBOX 360 starts up and starts loading sequences of Boot Loader (BL) code
 - During this process, it supplies 8-bit "post codes" on an 8-bit bus present on the motherboard
-- You can inspect the post codes and each code represents a different step of the boot process.
-- Post code 0xD8 = BL RC4 decryption (RC4 Encrypted BL stored on flash chip)
-- Post code 0xDA = BL SHA1 verification (compares hardware embedded signature to loaded code signature) 
+- You can read these pins for post codes and each code represents a different step of the boot process.
+- At post code 0xD8, BL RC4 decryption is done (RC4 Encrypted BL stored on flash chip)
+- At post code 0xDA, BL SHA1 verification is done (compares hardware embedded signature to loaded code signature) 
 - If signatures match, it is MS signed code and the system continues to start up
 - If the loaded code signature does not match the hardware embedded signature, the system resets
 - After a small number of resets and retry loops, the system halts
@@ -51,11 +51,12 @@ Step by step glitching an XBOX 360
 - Issue a command on the I2C bus to slow down the CPU significantly
 - Wait for post code 0xDA (BL verification)
 - Wait EXACTLY until `memcmp` executes to compare signatures
-- Send a 3-10ns pulse on CPU RESET line to force a 0x00 return from `memcmp`
+- Send a 3-10ns pulse on CPU RESET line to glitch a 0x00 return from `memcmp`
 - The system will "think" the signatures match and will continue to run un-trusted code
-- Issue a command on the I2C bus to speed up the CPU back to normal
+- Issue a command on the I2C bus to speed up the CPU back to normak
+- Tadaa - you are now running fully un-trusted code!!
 - The custom ROM image also contains a custom SMC (Systems Management Controller)
-- If this custom SMC does not detect a success within a specific timeout reset and try again.
+- If this custom SMC does not detect a success within a specific timeout, it resets and tries again.
 - The custom SMC will also override the halt and continiously loop and reset until the glitch works.
 
 You can read the full technical details and description from Gligli here:
@@ -87,15 +88,15 @@ I have always been very intrigued at the inner workings of this incredible feat 
 
 # Tools of the trade: CPLD and NAND programmer
 ![XBOX](images/jr_programmer.jpg)
-- You need to program the CPLD
-- You need to flash a custom ROM image to the XBOX 360
+- You need to program the CPLD with glitch code
+- And you need to flash a custom ROM image to the XBOX 360
 - Turns out, there is a really handy tool that can do BOTH!
-- I used a `J-R PRogrammer` that you can buy off E-Bay or Amazon 
+- I used a `J-R Programmer` that you can buy off E-Bay or Amazon 
 - https://www.amazon.com/gp/product/B01MTUWLVJ
 
 ## Tools of the trade: Logic Analyzer
 ![XBOX](images/kingst.jpg)
-- You need to visualize data on the POST, RESET and I2C lines
+- You need to visualize data on the POST, RESET, DEBUG and I2C lines
 - I have a Saleae 8 channel 50Mhz, which turned out not to be fast enough
 - I found a not too expensive 200Mhz Kingst LA2016 Logic Analyzer on Amazon
 - There are better and more expensive, but this will do just fine.
@@ -114,7 +115,7 @@ I have always been very intrigued at the inner workings of this incredible feat 
 ## Looking under the hood (Matrix board)
 ![XBOX](images/analyzer_connected.jpg)
 
-After install and sucessfull "Glitch", I started to look under the hood how this hack actually works and I connected the Logic Analyzer to the RESET, POST, CLOCK and DBG pads of the Matrix board and additionally hooked it up to the XBOX I2C bus SDA and SCL pins to monitor I2C traffic.
+After install and sucessfull "Glitch", I started to look under the hood how this hack actually works and I connected the Logic Analyzer to the RESET (A), POST (B), CLK (C) and DEBUG (E) pads of the Matrix board and additionally hooked it up to the XBOX 360's I2C bus SDA and SCL pins to monitor I2C traffic.
 
 ![XBOX](images/matrix_pads.jpg)
 
@@ -126,15 +127,16 @@ After install and sucessfull "Glitch", I started to look under the hood how this
 - Every post message to the XBOX's 8-Bit post bus, the value gets incremented by 1
 - The POST pad is only connected on a single bit of XBOX 8-Bit Post bus - Bit[1] 
 - Connecting to Bit[1], means every SECOND post will toggle this pin HIGH/LOW
-- This means you can count posts by counting ever rising and falling edge of a single pin
-- Should be easy to count to posts to reach post 0xD8 and 0xDA
+- This means you can count posts by counting every rising and falling edge of a single pin
+- Should be easy to count posts to find post 0xD8 and 0xDA
 #### CLK (Matrix C >> XBOX Standby CLK)
-- The CLK runs at 48Mhz and is fed directly from the standby CLK on the XBOX 360
-- The CLK signal is left unmodified and simlpy clocks the CPLD, so it can be ignored.
-- Note - Newer revisions of XBOX 360 has no access to CLK and glitch board has an oscillator
+- I disabled the Matrix onboard oscillator by removing a zero ohm resistor.
+- The CLK connects to the 48Mhz standby CLK on the XBOX 360
+- The CLK signal is left unmodified, it clocks the CPLD and was ignored for my reversing purposes.
+- Note - Newer revisions of XBOX 360 has no access to CLK and you must use Matrix oscillator
 #### DEBUG (Matrix D >> South Bridge DEBUG)
-- This pad connects to a pin on the South Bridge caled "Debug"
-- I was not sure exactly what this did in regards to this "Project Muffin" method?
+- This pad connects to a pin on the South Bridge called "Debug"
+- I was not sure exactly what this did in regards to this "Project Muffin" method (yet)
 #### SDA & SCL ( XBOX I2C Bus SDA & SCL )
 - I wanted to also monitor the I2C traffic to see what devices are on the bus
 - The I2C was not connected to anything on the Matrix board at this time.
@@ -146,7 +148,7 @@ After install and sucessfull "Glitch", I started to look under the hood how this
 I captured a few runs of the glitch and this is what I saw during the glitch 
 
 #### RESET (PINK)
-- The RESET pin toggles LOW/HIGH and after a while a VERY short LOW/HIGH pulse and then cycke repeats
+- The RESET pin toggles LOW/HIGH and after a while a VERY short LOW/HIGH pulse and then cycle repeats
 - I suspect the first toggle is simply a system reset
 - the super short less than 10ns pulse is highly likely to be the glitch pulse
 - the subsequent RESET toggles are probably retry attempts when the glitch failed
@@ -162,7 +164,7 @@ I captured a few runs of the glitch and this is what I saw during the glitch
 #### DEBUG (ORANGE)
 - The DEBUG pin on the South Bridge has a single long HIGH/LOW period during a RESET cycle
 - It is highly likely that this is what controls CPU slow down and speed up
-- I disconnected this pin and the time between post count 10 and 11 WAAAAAY less.. 
+- I disconnected this pin and the time between post count 10 and 11 was WAAAAAY less.. 
 - This told me that DEBUG HIGH at post count 10 is for sure CPU slow down and speed up at count 11
 #### SDA & SCL (GREEN & YELLOW)
 - The I2C bus has a bunch of traffic, but after a number of RESET cycle captures, I found a pattern!
@@ -170,8 +172,8 @@ I captured a few runs of the glitch and this is what I saw during the glitch
 - Right after the DEBUG line goes LOW, there is always a  `0xCD,0x04,0x4E,0x80,0x0C,0x02` message
 - These two messages are identical except for th last 3 bytes, so they must be related!
 - more captures by disconnecting the DEBUG pin had none of these messages
-- Confirmed DEBUG HIGH/LOW is for slow down and it triggers these I2C messages
-- Instead of using the DEBUG pin, injecting these messages directly on the I2C should have same effect
+- Confirmed DEBUG HIGH/LOW is for slowdown/speedup and it triggers these I2C messages
+- So, instead of using the DEBUG pin, injecting these messages directly on the I2C should have same effect
 
 
 ## Glitching the XBOX 360 and running unsigned code!!!
@@ -186,7 +188,7 @@ I ran a bunch of Logic Analyzer dumps, measured all the timings between events a
 - If RESET gets pulled LOW and there are post counts, this means the glitch failed and system reset
 - If system reset, start over again from Step 1
 
-I did not want to use the "DEBUG" pin, since I have heard rumours about repurposing the South Bridge output pin as a SMC input pin was not healthy for the South Bridge.. Jury is still out, but I wanted to use the tried and true Gligli method using the I2C bus.
+I did not want to use the "DEBUG" pin, since I have heard rumours about repurposing the South Bridge output pin as a SMC input pin was not healthy for the South Bridge.. Jury is still out, but I wanted to use the tried and true Gligli method using just the I2C bus.
 
 ![XBOX](images/xilinx_ise.jpg)
 
@@ -196,7 +198,7 @@ I played with the Gitch Timer values and I finally got it to glitch and Xell loa
 
 ![XBOX](images/xell.jpg)
 
-Finally I reached out to some folks on Discord familiar with XBOX 360 RGH (Mena and Octal450) and I learnt that the XBOX 360's standby clock at 48Mhz is waay too slow for consistent glitches. You can process the clock on Dual Edge Triggering (DET)with a Xilinx Coolrunner CPLD, meaning you can process on both rising and falling edges of a clock and in theory the processing happens at 98Mhz, but still even working with ~10 nanosecond periods, it was TOO SLOW ????
+Finally I reached out to some folks on Discord familiar with XBOX 360 RGH (Mena and Octal450) and I learnt that the XBOX 360's standby clock at 48Mhz is waay too slow for consistent glitches. You can process the clock on Dual Edge Triggering (DET) with a Xilinx Coolrunner CPLD, meaning you can process on both rising and falling edges of a clock and in theory the processing happens at 98Mhz, but still even working with ~10 nanosecond periods, it was TOO SLOW ????
 
 There are no built-in IP logic on CPLD's to perform frequency multiplication using Phased Lock Loops (PLL) or Digital Clock Managers (DCM's) or other features you typically get for free in FPGA's..  After some serious Google fu and head scratching, I found a archive on Xilinx Forums on a way to DOUBLE the frequency of a digital circuit by phase delaying the signal a little and then XOR'ing an inverse of the delayed signal with the original and boom! you can double the Frequency!
 
@@ -207,23 +209,23 @@ I implemented this Flip-Flop with clock XOR trick on the 48Mhz clock that should
 ![XBOX](images/48_48_phase.jpg)
 ![XBOX](images/48_to_96mhz.jpg)
 
-I hooked up the Oscilloscp[e to the board and after some basic tests involving simple frequency measurement with an oscilloscope, I confirmed the CPLD was doing exactly what the Xilinx forum suggested.. It delayed the input 48Mhz clock phase by a few degrees, then XOR'ed the Input 48Mhz and delayed 48Mhz clock signals to produce a DOUBLE frequency signal at 98Mhz - Then you can do Dual Edge Triggering to process signals at 192Mhz!!!!  Thats pretty crazy to process at 4x the input clock speed without any PLL's or DCM's!!!  
+I hooked up my Oscilloscope to the board and after some basic tests involving basic frequency measurements, I confirmed the CPLD was doing exactly what the Xilinx forum suggested.. It delayed the input 48Mhz clock phase by a few degrees, then XOR'ed the Input 48Mhz and delayed 48Mhz clock signals to produce a DOUBLE frequency signal at 98Mhz - Then you can do Dual Edge Triggering to process signals at 192Mhz!!!!  Thats pretty crazy to process at 4x the input clock speed without any PLL's or DCM's!!!  
 
-### Now I could process in 5.208333 nanosecond periods!!  thats a pretty darn accuracy clock!
+### Now I could process in 5.208333 nanosecond periods - that is a pretty darn accurate clock !!
 
-After these Changes and some more input from Octab450 on glitch timing fine tuning and a suggestion to delay the "slow down" message until 30-50ms after post count 10, I found the magic numbers..  and BOOM!!  I was able to glitch the XBOX 360 pretty much within 1-5 seconds EVERY single time!!
+After these Changes and some more input from Octal450 on glitch timing fine tuning and a suggestion to delay the "slow down" message until 30-50ms after post count 10, I found the magic numbers..  and BOOM!!  I was able to glitch the XBOX 360 pretty much within 1-5 seconds EVERY single time!! using my OWN code to do it!!!
 
 ![XBOX](images/all_good.png)
 
 This was a WILD ride! I learnt so much during the process about hardware glitching and how powerful of a tool such a teeny tiny little anomaly at the right time could be! 
 
-I am still AMAZED at the people who researched this hack and found all the puzzle pieces to pull it off..  This is a very advanced hack and to get to to work so well and so consistently is pretty darn incredible.
+I am still AMAZED at the people who researched this hack 10 years ago and found all the puzzle pieces to pull it off..  This is a very advanced hack and to get to to work so well and so consistently is pretty darn incredible.
 
-#### Thanks Octal450 and Mena on Discord for your help and guidance, it certainly was a cool journey.]
+#### Thanks Octal450 and Mena on Discord for your help and guidance, it certainly was a cool journey.
 
-Feel free to ping me if you have any questions about the code or the process 
+Feel free to ping me if anyone has any questions about the code or the process 
 
-cheers!
+ENJOY!
 
 Koos
 
