@@ -194,6 +194,8 @@ I did not want to use the "DEBUG" pin, since I have heard rumours about repurpos
 
 So after reading a book and few tutorials on Verilog, I downloaded the free Xilinx ISE 14.7 IDE and went about implementing the all the code in this repo to perform steps 1 through 5 and all the rest of the logic to auto restart and retry and additionally use I2C based slowdown instead of South Bridge DEBUG "Muffin" style slowdown.
 
+I have to say, getting everthing to work and fit into a 64 cell CPLD, was REALLY tricky!! Everyone I spoke to told me that it can't be done..  Well.. I finally cracked it and it all fit and seemed to work as planned.
+
 I played with the Gitch Timer values and I finally got it to glitch and Xell loaded up!!! HOLY SHIT, IT WORKS!!!! but it was VERY inconsistent.. I could only get it to sucessfully glitch like once or twice after many many many reset cycles..
 
 ![XBOX](images/xell.jpg)
