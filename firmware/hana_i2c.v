@@ -88,8 +88,9 @@ module hana_i2c(
 				bit_pos <= `bit_pos_max;
 			end
 			else
-				// move to next bit or overflow to start
+			begin
 				bit_pos <= bit_pos - 1;
+			end
 			
 		end //no message to send
 		else
