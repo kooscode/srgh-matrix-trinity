@@ -46,7 +46,7 @@ The "Glitch"
 - If you can fake-out the CPU into thinking signatures match, you can run ANY code you want..
 
 Step by step glitching an XBOX 360
-- Create a ROM image with custom code and flash to onboard NAND chip
+- Create a NAND image with custom code and flash to onboard NAND chip
 - Wait for post code 0xD8 (BL decryption)
 - Issue a command on the I2C bus to slow down the CPU significantly
 - Wait for post code 0xDA (BL verification)
@@ -55,7 +55,7 @@ Step by step glitching an XBOX 360
 - The system will "think" the signatures match and will continue to run un-trusted code
 - Issue a command on the I2C bus to speed up the CPU back to normal
 - Tadaa - you are now running fully un-trusted code!!
-- The custom ROM image also contains a custom SMC (Systems Management Controller)
+- The custom NAND image also contains a custom SMC (Systems Management Controller)
 - If this custom SMC does not detect a success within a specific timeout, it resets and tries again.
 - The custom SMC will also override the halt and continiously loop and reset until the glitch works.
 
@@ -89,14 +89,14 @@ I have always been very intrigued at the inner workings of this incredible feat 
 # Tools of the trade: CPLD and NAND programmer
 ![XBOX](images/jr_programmer.jpg)
 - You need to program the CPLD with glitch code
-- And you need to flash a custom ROM image to the XBOX 360
+- And you need to flash a custom NAND image to the XBOX 360
 - Turns out, there is a really handy tool that can do BOTH!
 - I used a `J-R Programmer` that you can buy off E-Bay or Amazon 
 - https://www.amazon.com/gp/product/B01MTUWLVJ
 
 ## Tools of the trade: Logic Analyzer
 ![XBOX](images/kingst.jpg)
-- You need to visualize data on the POST, RESET, DEBUG and I2C lines
+- You need to visualize data on the POST, RESET, DB2G3 and I2C lines
 - I have a Saleae 8 channel 100Mhz, which turned out not to be fast enough
 - I found a not too expensive 200Mhz Kingst LA2016 Logic Analyzer on Amazon
 - There are better and more expensive, but this will do just fine.
@@ -107,15 +107,15 @@ I have always been very intrigued at the inner workings of this incredible feat 
 
 - I installed the "Matrix" board and was able to get the existing exploit running.
 - This particular board uses an install called "Project Muffin" for XBOX 360 Slim systems
-- "Project Muffin" does not connect to the I2C bus, but connects to a DEBUG pin on South Bridge
-- The default custpm ROM image just loads "XELL Reloaded", an open source boot loader
+- "Project Muffin" does not connect to the I2C bus, but connects to the GPIO_0 pin on South Bridge marked "DB2G3" on the mainboard.
+- The default custpm NAND image just loads "XELL Reloaded", an open source boot loader
 - After install, the Xell bootloader came up within 5-10 seconds.. the glitch works!!
 - https://github.com/Free60Project/xell-reloaded
 
 ## Looking under the hood (Matrix board)
 ![XBOX](images/analyzer_connected.jpg)
 
-After install and sucessfull "Glitch", I started to look under the hood how this hack actually works and I connected the Logic Analyzer to the RESET (A), POST (B), CLK (C) and DEBUG (E) pads of the Matrix board and additionally hooked it up to the XBOX 360's I2C bus SDA and SCL pins to monitor I2C traffic.
+After install and sucessfull "Glitch", I started to look under the hood how this hack actually works and I connected the Logic Analyzer to the RESET (A), POST (B), CLK (C) and DB2G3 (E) pads of the Matrix board and additionally hooked it up to the XBOX 360's I2C bus SDA and SCL pins to monitor I2C traffic.
 
 ![XBOX](images/matrix_pads.jpg)
 
@@ -134,8 +134,8 @@ After install and sucessfull "Glitch", I started to look under the hood how this
 - The CLK connects to the 48Mhz standby CLK on the XBOX 360
 - The CLK signal is left unmodified, it clocks the CPLD and was ignored for my reversing purposes.
 - Note - Newer revisions of XBOX 360 has no access to CLK and you must use Matrix oscillator
-#### DEBUG (Matrix D >> South Bridge DEBUG)
-- This pad connects to a pin on the South Bridge called "Debug"
+#### DB2G3 (Matrix E >> South Bridge GPIO_0 / DB2G3)
+- This pad connects to a the GPIO_0 pin of the South Bridge marked "DB2G3" on XBOX 360 mainboard
 - I was not sure exactly what this did in regards to this "Project Muffin" method (yet)
 #### SDA & SCL ( XBOX I2C Bus SDA & SCL )
 - I wanted to also monitor the I2C traffic to see what devices are on the bus
@@ -155,25 +155,25 @@ I captured a few runs of the glitch and this is what I saw during the glitch
 #### POST (BLUE)
 - There are 20 post bit 1 HIGH/LOW toggles that I counted during RESET LOW period 
 - I refer to these HIGH/LOW rising and falling edges as "post counts", 1 count each per edge
-- Then there are 10 post counts before the DEBUG pin goes HIGH
-- Post count 10 is likely post bus message 0xD8 (BL Decrypt) and DEBUG HIGH is likely CPU slow down
+- Then there are 10 post counts before the DB2G3 pin goes HIGH
+- Post count 10 is likely post bus message 0xD8 (BL Decrypt) and DB2G3 HIGH is likely CPU slow down
 - After 1 more post pin toggle at post count 11 there is the ~5ns pulse on RESET line
 - It is highly likely that post count 11 is post message 0xDA (SHA signature verify)
 - The RESET pulse right after post count 11 is likely the `memcmp` glitch 
-- The DEBUG line goes HIGH again right after the the glitch pulse, likely indicating CPU speed up
-#### DEBUG (ORANGE)
-- The DEBUG pin on the South Bridge has a single long HIGH/LOW period during a RESET cycle
+- The DB2G3 line goes HIGH again right after the the glitch pulse, likely indicating CPU speed up
+#### DB2G3 (ORANGE) (Marked as DEBUG in trace)
+- The DB2G3 pin on the South Bridge has a single long HIGH/LOW period during a RESET cycle
 - It is highly likely that this is what controls CPU slow down and speed up
 - I disconnected this pin and the time between post count 10 and 11 was WAAAAAY less.. 
-- This told me that DEBUG HIGH at post count 10 is for sure CPU slow down and LOW is speed up at count 11
+- This told me that DB2G3 HIGH at post count 10 is for sure CPU slow down and LOW is speed up at count 11
 #### SDA & SCL (GREEN & YELLOW)
 - The I2C bus has a bunch of traffic, but after a number of RESET cycle captures, I found a pattern!
-- Right after the DEBUG line goes HIGH, there is always a `0xCD,0x04,0x4E,0x08,0x80,0x03` message
-- Right after the DEBUG line goes LOW, there is always a  `0xCD,0x04,0x4E,0x80,0x0C,0x02` message
+- Right after the DB2G3 line goes HIGH, there is always a `0xCD,0x04,0x4E,0x08,0x80,0x03` message
+- Right after the DB2G3 line goes LOW, there is always a  `0xCD,0x04,0x4E,0x80,0x0C,0x02` message
 - These two messages are identical except for th last 3 bytes, so they must be related!
-- more captures by disconnecting the DEBUG pin had none of these messages
-- Confirmed DEBUG HIGH/LOW is for slowdown/speedup and it triggers these I2C messages
-- So, instead of using the DEBUG pin, injecting these messages directly on the I2C should have same effect
+- more captures by disconnecting the DB2G3 pin had none of these messages
+- Confirmed DB2G3 HIGH/LOW is for slowdown/speedup and it triggers these I2C messages
+- So, instead of using the DB2G3 pin, injecting these messages directly on the I2C should have same effect
 
 
 ## Glitching the XBOX 360 and running unsigned code!!!
@@ -188,11 +188,11 @@ I ran a bunch of Logic Analyzer dumps, measured all the timings between events a
 - If RESET gets pulled LOW and there are post counts, this means the glitch failed and system reset
 - If system reset, start over again from Step 1
 
-I did not want to use the "DEBUG" pin, since I have heard rumours about repurposing the South Bridge output pin as a SMC input pin was not healthy for the South Bridge.. Jury is still out, but I wanted to use the tried and true Gligli method using just the I2C bus.
+I did not want to use the South Bridge GPIO_0 (DB2G3) pin, since I have heard rumours about repurposing the South Bridge output pin as a SMC input pin was not healthy for the South Bridge.. Jury is still out, but I wanted to use the tried and true Gligli method using just the I2C bus.
 
 ![XBOX](images/xilinx_ise.jpg)
 
-So after reading a book and few tutorials on Verilog, I downloaded the free Xilinx ISE 14.7 IDE and went about implementing the all the code in this repo to perform steps 1 through 5 and all the rest of the logic to auto restart and retry and additionally use I2C based slowdown instead of South Bridge DEBUG "Muffin" style slowdown.
+So after reading a book and few tutorials on Verilog, I downloaded the free Xilinx ISE 14.7 IDE and went about implementing the all the code in this repo to perform steps 1 through 5 and all the rest of the logic to auto restart and retry and additionally use I2C based slowdown instead of South Bridge GPIO_0 (DB2G3) "Muffin" style slowdown.
 
 I have to say, getting everything to work and fit into a 64 cell CPLD, was REALLY tricky!! Everyone I spoke to told me that it can't be done..  Well.. I finally cracked it and it all fit and seemed to work as planned.
 
@@ -200,7 +200,7 @@ I played with the Glitch Timer values and I finally got it to glitch and XELL lo
 
 ![XBOX](images/xell.jpg)
 
-Finally I reached out to some folks on Discord familiar with XBOX 360 RGH (Mena and Octal450) and I learnt that the XBOX 360's standby clock at 48Mhz is waay too slow for consistent glitches. You can process the clock on Dual Edge Triggering (DET) with a Xilinx Coolrunner CPLD, meaning you can process on both rising and falling edges of a clock and in theory the processing happens at 98Mhz, but still even working with ~10 nanosecond periods, it was TOO SLOW ????
+Finally I reached out to some folks on Discord familiar with XBOX 360 RGH (Mena and Octal450) and I learnt that the XBOX 360's standby clock at 48Mhz is waay too slow for consistent glitches. You can process the clock on Dual Edge Triggering (DET) with a Xilinx Coolrunner CPLD, meaning you can process on both rising and falling edges of a clock and in theory the processing happens at 96Mhz, but still even working with ~10 nanosecond periods, it was TOO SLOW ????
 
 There are no built-in IP logic on CPLD's to perform frequency multiplication using Phased Lock Loops (PLL) or Digital Clock Managers (DCM's) or other features you typically get for free in FPGA's..  After some serious Google fu and head scratching, I found an archive on Xilinx Forums on a way to DOUBLE the frequency of a digital circuit by phase delaying the signal a little and then XOR'ing an inverse of the delayed signal with the original and boom! you can double the Frequency!
 
@@ -211,7 +211,7 @@ I implemented this Flip-Flop with clock XOR trick on the 48Mhz clock that should
 ![XBOX](images/48_48_phase.jpg)
 ![XBOX](images/48_to_96mhz.jpg)
 
-I hooked up my Oscilloscope to the board and after some tests involving basic frequency measurements, I confirmed the CPLD was doing exactly what the Xilinx forum suggested.. It delayed the input 48Mhz clock phase by a few degrees, then XOR'ed the Input 48Mhz and delayed 48Mhz clock signals to produce a DOUBLE frequency clock signal at 98Mhz - Then you can do Dual Edge Triggering to process signals at 192Mhz!!!!  Thats pretty crazy to process at 4x the input clock speed without any PLL's or DCM's!!!  
+I hooked up my Oscilloscope to the board and after some tests involving basic frequency measurements, I confirmed the CPLD was doing exactly what the Xilinx forum suggested.. It delayed the input 48Mhz clock phase by a few degrees, then XOR'ed the Input 48Mhz and delayed 48Mhz clock signals to produce a DOUBLE frequency clock signal at 96Mhz - Then you can do Dual Edge Triggering to process signals at 192Mhz!!!!  Thats pretty crazy to process at 4x the input clock speed without any PLL's or DCM's!!!  
 
 ### Now I could process and produce signals on the CPLD in 5.208333 nanosecond periods - that is a pretty darn accurate clock !!
 
