@@ -1,0 +1,51 @@
+S-RGH Tuning Guide
+By Octal450
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+This document will explain how to tune the boot times of your S-RGH console.
+Written by lots of testing as well as info from 15432.
+I am not responsible for damage to your console.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+They are compatible with:
+Coolrunner Rev-C/D
+Matrix Glitcher V1/V3
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+What is the timing, and what is the length
+
+60.0_0.5: 60.0 is the timing, 0.5 is the length
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Suggested files:
+
+Trinity:
+- 60.0 0.5
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+So, how do you tune the timing?
+
+As the glitch chip pulses, a green debug light will flash a pattern. Using this pattern we can know roughly how to adjust the tuning. Let me start with some examples. The ideal is slightly "below" the edge of Long/Short, closer to Short. You want to see more Short than Long cycles.
+
+If you get good light behavior, mostly Short but also Long sometimes, but still Console do not boot well, try to recreate this scenerio with other timing/pulse length. If using Corona with Xecuter Postfix V2, try moving wire to a bigger number pad. This will adjust for you the length of POST.
+
+1) 2 Short Blinks, then Short
+.....##...##...................##............
+This means that the checks were passed, but the console failed to start.
+Probably the timing is too low, or the pulse length is too large.
+
+2) 2 Short Blinks, then Long
+.....##...##...................##############
+This means that the checks failed.
+Probably the timing is too high, or the pulse length is too small.
+
+It does not be known if the timing or pulse length is the issue. Try to change one, and if the behavior does not improve or the light does not change, then you need to change the other first. For Trinity, MOSTLY the pulse length 1 works best, for Corona, MOSTLY the pulse length 2 works best. Your console might be different, some will take timings that you do not expect.
+
+3) 4 Short Blinks, then Long
+.....##...##...................##...##...................##############
+This means there is a problem with RST wiring problem causing pulse length to be very big. Try to use alternate points or longer wire.
+
+4) No Light Blinks or Always On
+.............................................
+#############################################
+This means your wiring is bad, or the timing file was not written sucessfully, or maybe you have a WRONG timing file flashed (like RGH1.2 or something)
