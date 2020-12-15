@@ -16,6 +16,9 @@ module hana_i2c(
 	// Slowdown can be delayed by 1ms intervals
 	// i.e. 30 = 30ms delay before slowdown is injected.
 	`define slowdown_delays 31
+	
+	//max number of bits used for i2c messages
+	`define bit_pos_max 255
 
 	// i2c slowdown and speedup messages with clocks
 	// These i2c messages were compared with logic analyzer when SMC_DBG is asserted and de-asserted
@@ -41,7 +44,7 @@ module hana_i2c(
 	initial
 	begin
 		//initialize i2c for high impedence
-		bit_pos = 255;
+		bit_pos = `bit_pos_max;
 		i2c_sda = 1;
 		i2c_scl = 1;
 		i2c_sent = 0;

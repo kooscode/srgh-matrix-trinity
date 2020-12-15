@@ -108,7 +108,7 @@ I have always been very intrigued at the inner workings of this incredible feat 
 - I installed the "Matrix" board and was able to get the existing exploit running.
 - This particular board uses an install called "Project Muffin" for XBOX 360 Slim systems
 - "Project Muffin" does not connect to the I2C bus, but connects to the GPIO_0 pin on South Bridge marked "DB2G3" on the mainboard.
-- The default custpm NAND image just loads "XELL Reloaded", an open source boot loader
+- The default custom NAND image just loads "XELL Reloaded", an open source boot loader
 - After install, the Xell bootloader came up within 5-10 seconds.. the glitch works!!
 - https://github.com/Free60Project/xell-reloaded
 
