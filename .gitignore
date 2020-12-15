@@ -55,11 +55,10 @@
 *.data
 *.jed
 *.blx
-
 sch2HdlBatchFile
 main_html
 _xmsgs
 _ngo
 xst
-
+!release/*.txt
 

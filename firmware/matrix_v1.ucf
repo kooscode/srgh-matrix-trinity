@@ -7,7 +7,7 @@
 #** Note - 22k resistor between CPLD Pin 22 and Matrix Pad F
  
 NET "C_clk" 		LOC = "P29"	| IOSTANDARD = LVCMOS33; 
-NET "A_cpu_reset"	LOC = "P8"	| IOSTANDARD = LVCMOS18;// | SLEW=SLOW; 			
+NET "A_cpu_reset"	LOC = "P8"	| IOSTANDARD = LVCMOS18;# | SLEW=SLOW; 			
 NET "B_post"		LOC = "P40"	| IOSTANDARD = LVCMOS18 | SCHMITT_TRIGGER;
 NET "D_i2c_sda"	LOC = "P18"	| IOSTANDARD = LVCMOS33; 
 NET "E_i2c_scl"	LOC = "P19"	| IOSTANDARD = LVCMOS33; 
