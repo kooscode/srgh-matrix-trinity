@@ -202,20 +202,20 @@ I played with the Glitch Timer values and I finally got it to glitch and XELL lo
 
 Finally I reached out to some folks on Discord familiar with XBOX 360 RGH (Mena and Octal450) and I learnt that the XBOX 360's standby clock at 48Mhz is waay too slow for consistent glitches. You can process the clock on Dual Edge Triggering (DET) with a Xilinx Coolrunner CPLD, meaning you can process on both rising and falling edges of a clock and in theory the processing happens at 98Mhz, but still even working with ~10 nanosecond periods, it was TOO SLOW ????
 
-There are no built-in IP logic on CPLD's to perform frequency multiplication using Phased Lock Loops (PLL) or Digital Clock Managers (DCM's) or other features you typically get for free in FPGA's..  After some serious Google fu and head scratching, I found a archive on Xilinx Forums on a way to DOUBLE the frequency of a digital circuit by phase delaying the signal a little and then XOR'ing an inverse of the delayed signal with the original and boom! you can double the Frequency!
+There are no built-in IP logic on CPLD's to perform frequency multiplication using Phased Lock Loops (PLL) or Digital Clock Managers (DCM's) or other features you typically get for free in FPGA's..  After some serious Google fu and head scratching, I found an archive on Xilinx Forums on a way to DOUBLE the frequency of a digital circuit by phase delaying the signal a little and then XOR'ing an inverse of the delayed signal with the original and boom! you can double the Frequency!
 
 ![XBOX](images/freq_doubler_sch.png)
 
-I implemented this Flip-Flop with clock XOR trick on the 48Mhz clock that should produce a 96Mhz clock and then did Dual Edge Triggering ontop of that to get to theoretically get to 192Mhz!  Now to test it out and check the output frequency!
+I implemented this Flip-Flop with clock XOR trick on the 48Mhz clock that should produce a 96Mhz clock and then did Dual Edge Triggering ontop of that to theoretically get to 192Mhz!  Now to test it out and check the output frequencies!
 
 ![XBOX](images/48_48_phase.jpg)
 ![XBOX](images/48_to_96mhz.jpg)
 
-I hooked up my Oscilloscope to the board and after some basic tests involving basic frequency measurements, I confirmed the CPLD was doing exactly what the Xilinx forum suggested.. It delayed the input 48Mhz clock phase by a few degrees, then XOR'ed the Input 48Mhz and delayed 48Mhz clock signals to produce a DOUBLE frequency signal at 98Mhz - Then you can do Dual Edge Triggering to process signals at 192Mhz!!!!  Thats pretty crazy to process at 4x the input clock speed without any PLL's or DCM's!!!  
+I hooked up my Oscilloscope to the board and after some tests involving basic frequency measurements, I confirmed the CPLD was doing exactly what the Xilinx forum suggested.. It delayed the input 48Mhz clock phase by a few degrees, then XOR'ed the Input 48Mhz and delayed 48Mhz clock signals to produce a DOUBLE frequency clock signal at 98Mhz - Then you can do Dual Edge Triggering to process signals at 192Mhz!!!!  Thats pretty crazy to process at 4x the input clock speed without any PLL's or DCM's!!!  
 
-### Now I could process in 5.208333 nanosecond periods - that is a pretty darn accurate clock !!
+### Now I could process and produce signals on the CPLD in 5.208333 nanosecond periods - that is a pretty darn accurate clock !!
 
-After these Changes and some more input from Octal450 on glitch timing fine tuning and a suggestion to delay the "slow down" message until 30-50ms after post count 10, I found the magic numbers..  and BOOM!!  I was able to glitch the XBOX 360 pretty much within 1-5 seconds EVERY single time!! using my OWN code to do it!!!
+After these Changes and some more input from Octal450 on glitch timing fine tuning and a suggestion to delay the "slow down" message until 30-50ms after post count 10, I found the magic numbers..  and BOOM!!  I was able to glitch the XBOX 360 pretty much within 1-5 seconds EVERY single time!! using my OWN code to do it that I created entirely from a Logic Analyzer output !!!
 
 ![XBOX](images/all_good.png)
 
