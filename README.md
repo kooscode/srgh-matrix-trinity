@@ -215,7 +215,7 @@ I hooked up my Oscilloscope to the board and after some tests involving basic fr
 
 ### Now I could process and produce signals on the CPLD in 5.208333 nanosecond periods - that is a pretty darn accurate clock !!
 
-After these Changes and some more input from Octal450 on glitch timing fine tuning and a suggestion to delay the "slow down" message until 30-50ms after post count 10, I found the magic numbers..  and BOOM!!  I was able to glitch the XBOX 360 pretty much within 1-5 seconds EVERY single time!! using my OWN code to do it that I created entirely from a Logic Analyzer output !!!
+After these Changes and some more input from Octal450 on glitch timing fine tuning and a suggestion to delay the "slow down" message until 30-50ms after post count 10, I found the magic numbers..  and BOOM!!  I was able to glitch the XBOX 360 pretty much within 1-5 seconds EVERY single time!! using my OWN code to do it!! And that code I created entirely from a Logic Analyzer output !!!
 
 ![XBOX](images/all_good.png)
 
