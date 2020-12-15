@@ -10,7 +10,7 @@ So - here is a hopefully informative write up of my Journey to running unsigned 
 The Original XBOX was released in 2001 and the security of that system was defeated by hardware reverse engineering fairly soon after launch and folks were able to run Linux on the system.  There were MANY mistakes made in the security for the original XBOX, the biggest of them were probably the basic oversights around implementation of very weak and outdated security hashing algorithms. The system saw 6 !hardware revisions through its short 4 year life span and every single one those included fixes to address security flaws and each of those "fixes" were in turn defeated within weeks of release. Today the original XBOX still is one of my favourite systems and I have quite a few of them squirreled away..
 
 ## XBOX 360 (Released 2005)
-![XBOX](images/xbox-360.jpg)
+![XBOX](images/xbox_360.jpg)
 
 This cat and mouse game ended with the XBOX 360 being released in November 2005 and security on this system was priority No.1. The system is pretty solid and secure and I wont go through all the details, but suffice to say that every step of the way during the loading and execution of any code, there are hardware layers to make sure only Microsoft "signed code" can run. but.. Not everything is always perfect..
 
@@ -20,7 +20,7 @@ This cat and mouse game ended with the XBOX 360 being released in November 2005 
 In late 2011, about six years after the launch of the XBOX 360, a couple of very smart hardware hackers (Gligli and Tiros) managed to completely defeat the XBOX 360 security by using a hardware "glitching" method and made the XBOX CPU essentially think the code it was executing is pure Microsoft provided "signed" code, when in fact it was tampered with.. i.e. You can run any code you want!! And thus the XBOX 360 RGH (Reset Glitch Hack) exploit was born!
 
 ## "Hardware Glitching"
-![XBOX](images/hardware-glitch.jpg)
+![XBOX](images/hardware_glitch.jpg)
 
 Turns out, hardware is pretty susceptible to electrial interference and in specific, digital logic chips like CPU's dont like very noisy or unstable power, data or reset lines..  
 
@@ -64,7 +64,7 @@ https://github.com/gligli/tools/blob/master/reset_glitch_hack/reset_glitch_hack.
 ------------------
 # Reverse Engineering the XBOX 360 RGH Exploit
 
-![XBOX](images/glitch-reverse.jpg)
+![XBOX](images/glitch_reverse.jpg)
 
 
 ## Learning by standing on the shoulders of giants
@@ -86,7 +86,7 @@ I have always been very intrigued at the inner workings of this incredible feat 
 - https://www.amazon.com/gp/product/B07KDCDN5H
 
 # Tools of the trade: CPLD and NAND programmer
-![XBOX](images/jr-programmer.jpg)
+![XBOX](images/jr_programmer.jpg)
 - You need to program the CPLD
 - You need to flash a custom ROM image to the XBOX 360
 - Turns out, there is a really handy tool that can do BOTH!
@@ -116,7 +116,7 @@ I have always been very intrigued at the inner workings of this incredible feat 
 
 After install and sucessfull "Glitch", I started to look under the hood how this hack actually works and I connected the Logic Analyzer to the RESET, POST, CLOCK and DBG pads of the Matrix board and additionally hooked it up to the XBOX I2C bus SDA and SCL pins to monitor I2C traffic.
 
-![XBOX](images/matrix-pads.jpg)
+![XBOX](images/matrix_pads.jpg)
 
 #### RESET (Matrix A >> XBOX RESET)
 - The RESET pad is connected to XBOX CPU RESET pin, HIGH = Running, LOW = reset condition.
@@ -141,7 +141,7 @@ After install and sucessfull "Glitch", I started to look under the hood how this
 
 
 ## Reading the Tea leaves..
-![XBOX](images/glitch-dump1.png)
+![XBOX](images/glitch_dump1.png)
 
 I captured a few runs of the glitch and this is what I saw during the glitch 
 
@@ -175,7 +175,7 @@ I captured a few runs of the glitch and this is what I saw during the glitch
 
 
 ## Glitching the XBOX 360 and running unsigned code!!!
-![XBOX](images/muffin-full-cycle.png)
+![XBOX](images/muffin_full_cycle.png)
 
 I ran a bunch of Logic Analyzer dumps, measured all the timings between events and was able to to piece together the EXACT timings and steps I needed to perform the XBOX 360 Reset Glitch Hack.
 - STEP 1 - Wait for RESET to complete and start counting post Rising/Falling edges
@@ -188,7 +188,7 @@ I ran a bunch of Logic Analyzer dumps, measured all the timings between events a
 
 I did not want to use the "DEBUG" pin, since I have heard rumours about repurposing the South Bridge output pin as a SMC input pin was not healthy for the South Bridge.. Jury is still out, but I wanted to use the tried and true Gligli method using the I2C bus.
 
-![XBOX](images/xilinx-ise.jpg)
+![XBOX](images/xilinx_ise.jpg)
 
 So after reading a book and few tutorials on Verilog, I downloaded the free Xilinx ISE 14.7 IDE and went about implementing the all the code in this repo to perform steps 1 through 5 and all the rest of the logic to auto restart and retry and additionally use I2C based slowdown instead of South Bridge DEBUG "Muffin" style slowdown.
 
@@ -200,12 +200,12 @@ Finally I reached out to some folks on Discord familiar with XBOX 360 RGH (Mena 
 
 There are no built-in IP logic on CPLD's to perform frequency multiplication using Phased Lock Loops (PLL) or Digital Clock Managers (DCM's) or other features you typically get for free in FPGA's..  After some serious Google fu and head scratching, I found a archive on Xilinx Forums on a way to DOUBLE the frequency of a digital circuit by phase delaying the signal a little and then XOR'ing an inverse of the delayed signal with the original and boom! you can double the Frequency!
 
-![XBOX](images/freq-doubler-sch.png)
+![XBOX](images/freq_doubler_sch.png)
 
 I implemented this Flip-Flop with clock XOR trick on the 48Mhz clock that should produce a 96Mhz clock and then did Dual Edge Triggering ontop of that to get to theoretically get to 192Mhz!  Now to test it out and check the output frequency!
 
-![XBOX](images/48-48-phase.jpg)
-![XBOX](images/48-to-96mhz.jpg)
+![XBOX](images/48_48_phase.jpg)
+![XBOX](images/48_to_96mhz.jpg)
 
 I hooked up the Oscilloscp[e to the board and after some basic tests involving simple frequency measurement with an oscilloscope, I confirmed the CPLD was doing exactly what the Xilinx forum suggested.. It delayed the input 48Mhz clock phase by a few degrees, then XOR'ed the Input 48Mhz and delayed 48Mhz clock signals to produce a DOUBLE frequency signal at 98Mhz - Then you can do Dual Edge Triggering to process signals at 192Mhz!!!!  Thats pretty crazy to process at 4x the input clock speed without any PLL's or DCM's!!!  
 
@@ -213,7 +213,7 @@ I hooked up the Oscilloscp[e to the board and after some basic tests involving s
 
 After these Changes and some more input from Octab450 on glitch timing fine tuning and a suggestion to delay the "slow down" message until 30-50ms after post count 10, I found the magic numbers..  and BOOM!!  I was able to glitch the XBOX 360 pretty much within 1-5 seconds EVERY single time!!
 
-![XBOX](images/all-good.png)
+![XBOX](images/all_good.png)
 
 This was a WILD ride! I learnt so much during the process about hardware glitching and how powerful of a tool such a teeny tiny little anomaly at the right time could be! 
 
@@ -227,5 +227,5 @@ cheers!
 
 Koos
 
-![XBOX](images/happy-pepe.png)
+![XBOX](images/happy_pepe.png)
 
