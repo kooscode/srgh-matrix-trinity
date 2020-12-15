@@ -84,10 +84,12 @@ module hana_i2c(
 					i2c_sent <= i2c_send;
 				else
 					delay_cnt <= delay_cnt - 1;
-			end
 
-			// move to next bit or overflow to start
-			bit_pos <= bit_pos - 1;
+				bit_pos <= `bit_pos_max;
+			end
+			else
+				// move to next bit or overflow to start
+				bit_pos <= bit_pos - 1;
 			
 		end //no message to send
 		else
