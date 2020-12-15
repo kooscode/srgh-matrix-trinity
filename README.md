@@ -53,7 +53,7 @@ Step by step glitching an XBOX 360
 - Wait EXACTLY until `memcmp` executes to compare signatures
 - Send a 3-10ns pulse on CPU RESET line to glitch a 0x00 return from `memcmp`
 - The system will "think" the signatures match and will continue to run un-trusted code
-- Issue a command on the I2C bus to speed up the CPU back to normak
+- Issue a command on the I2C bus to speed up the CPU back to normal
 - Tadaa - you are now running fully un-trusted code!!
 - The custom ROM image also contains a custom SMC (Systems Management Controller)
 - If this custom SMC does not detect a success within a specific timeout, it resets and tries again.
