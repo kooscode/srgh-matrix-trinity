@@ -97,7 +97,7 @@ I have always been very intrigued at the inner workings of this incredible feat 
 ## Tools of the trade: Logic Analyzer
 ![XBOX](images/kingst.jpg)
 - You need to visualize data on the POST, RESET, DEBUG and I2C lines
-- I have a Saleae 8 channel 50Mhz, which turned out not to be fast enough
+- I have a Saleae 8 channel 100Mhz, which turned out not to be fast enough
 - I found a not too expensive 200Mhz Kingst LA2016 Logic Analyzer on Amazon
 - There are better and more expensive, but this will do just fine.
 - https://www.amazon.com/gp/product/B07D35FNYL
@@ -108,7 +108,7 @@ I have always been very intrigued at the inner workings of this incredible feat 
 - I installed the "Matrix" board and was able to get the existing exploit running.
 - This particular board uses an install called "Project Muffin" for XBOX 360 Slim systems
 - "Project Muffin" does not connect to the I2C bus, but connects to a DEBUG pin on South Bridge
-- The default ROM image just loads "Xell Reloaded", an open source boot loader
+- The default custpm ROM image just loads "XELL Reloaded", an open source boot loader
 - After install, the Xell bootloader came up within 5-10 seconds.. the glitch works!!
 - https://github.com/Free60Project/xell-reloaded
 
@@ -124,7 +124,7 @@ After install and sucessfull "Glitch", I started to look under the hood how this
 - When the system resets and starts boot the RESET pin goes HIGH and stays HIGH
 - This is also the pin where the 5ns glitch pulse gets injected  by pulling it LOW
 #### POST (Matrix B >> XBOX Post Bit 1)
-- Every post message to the XBOX's 8-Bit post bus, the value gets incremented by 1
+- With every post message sent to the XBOX's 8-Bit post bus, the value gets incremented by 1
 - The POST pad is only connected on a single bit of XBOX 8-Bit Post bus - Bit[1] 
 - Connecting to Bit[1], means every SECOND post will toggle this pin HIGH/LOW
 - This means you can count posts by counting every rising and falling edge of a single pin
@@ -165,7 +165,7 @@ I captured a few runs of the glitch and this is what I saw during the glitch
 - The DEBUG pin on the South Bridge has a single long HIGH/LOW period during a RESET cycle
 - It is highly likely that this is what controls CPU slow down and speed up
 - I disconnected this pin and the time between post count 10 and 11 was WAAAAAY less.. 
-- This told me that DEBUG HIGH at post count 10 is for sure CPU slow down and speed up at count 11
+- This told me that DEBUG HIGH at post count 10 is for sure CPU slow down and LOW is speed up at count 11
 #### SDA & SCL (GREEN & YELLOW)
 - The I2C bus has a bunch of traffic, but after a number of RESET cycle captures, I found a pattern!
 - Right after the DEBUG line goes HIGH, there is always a `0xCD,0x04,0x4E,0x08,0x80,0x03` message
@@ -194,7 +194,7 @@ I did not want to use the "DEBUG" pin, since I have heard rumours about repurpos
 
 So after reading a book and few tutorials on Verilog, I downloaded the free Xilinx ISE 14.7 IDE and went about implementing the all the code in this repo to perform steps 1 through 5 and all the rest of the logic to auto restart and retry and additionally use I2C based slowdown instead of South Bridge DEBUG "Muffin" style slowdown.
 
-I have to say, getting everthing to work and fit into a 64 cell CPLD, was REALLY tricky!! Everyone I spoke to told me that it can't be done..  Well.. I finally cracked it and it all fit and seemed to work as planned.
+I have to say, getting everything to work and fit into a 64 cell CPLD, was REALLY tricky!! Everyone I spoke to told me that it can't be done..  Well.. I finally cracked it and it all fit and seemed to work as planned.
 
 I played with the Glitch Timer values and I finally got it to glitch and XELL loaded up!!! HOLY SHIT, IT WORKS!!!! but it was VERY inconsistent.. I could only get it to sucessfully glitch like once or twice after many many many reset cycles..
 
