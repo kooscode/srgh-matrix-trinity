@@ -196,7 +196,7 @@ So after reading a book and few tutorials on Verilog, I downloaded the free Xili
 
 I have to say, getting everthing to work and fit into a 64 cell CPLD, was REALLY tricky!! Everyone I spoke to told me that it can't be done..  Well.. I finally cracked it and it all fit and seemed to work as planned.
 
-I played with the Gitch Timer values and I finally got it to glitch and Xell loaded up!!! HOLY SHIT, IT WORKS!!!! but it was VERY inconsistent.. I could only get it to sucessfully glitch like once or twice after many many many reset cycles..
+I played with the Glitch Timer values and I finally got it to glitch and XELL loaded up!!! HOLY SHIT, IT WORKS!!!! but it was VERY inconsistent.. I could only get it to sucessfully glitch like once or twice after many many many reset cycles..
 
 ![XBOX](images/xell.jpg)
 
