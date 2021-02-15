@@ -1,6 +1,6 @@
 # Hardware Security Exploit Research - XBOX 360
 
-I'm fairly well versed and have been involved in Original XBOX reverse engineering 20 years ago and have since not spent much time on the XBOX 360 beyond gaming and I have always been interrested in how exactly the XBOX 360 security was defeated and duplicate the results. 
+I'm fairly well versed and have been involved in Original XBOX reverse engineering 20 years ago and have since not spent much time on the XBOX 360 beyond gaming and I have always been interrested in how exactly the XBOX 360 security was defeated. 
 
 So - here is a hopefully informative write up of my Journey to running unsigned code on a XBOX 360..   Buckle up.. its a long read :)
 
@@ -12,12 +12,12 @@ The Original XBOX was released in 2001 and the security of that system was defea
 ## XBOX 360 (Released 2005)
 ![XBOX](images/xbox_360.jpg)
 
-This cat and mouse game ended with the XBOX 360 being released in November 2005 and security on this system was priority No.1. The system is pretty solid and secure and I wont go through all the details, but suffice to say that every step of the way during the loading and execution of any code, there are hardware layers to make sure only Microsoft "signed code" can run. but.. Not everything is always perfect..
+This cat and mouse game ended with the XBOX 360 being released in November 2005 and security on this system was priority No.1. The system is pretty solid and secure and I wont go through all the details, but suffice to say that every step of the way during the loading and execution of any code, there are hardware layers to make sure only Microsoft "signed code" can run. but.. Like in life, not everything is always perfect..
 
 ## XBOX 360 Security defeated - 2011
 ![XBOX](images/gligli.png)
 
-In late 2011, about six years after the launch of the XBOX 360, a couple of very smart hardware hackers (Gligli and Tiros) managed to completely defeat the XBOX 360 security by using a hardware "glitching" method and made the XBOX CPU essentially think the code it was executing is pure Microsoft provided "signed" code, when in fact it was tampered with.. i.e. You can run any code you want!! And thus the XBOX 360 RGH (Reset Glitch Hack) exploit was born!
+In late 2011, about six years after the launch of the XBOX 360, a couple of very smart hardware hackers (Gligli and Tiros) managed to defeat the XBOX 360 security by using a hardware "glitching" method and made the XBOX CPU essentially think the code it was executing is pure Microsoft provided "signed" code, when in fact it was tampered with.. i.e. You can run any code you want!! And thus the XBOX 360 RGH (Reset Glitch Hack) exploit was born!
 
 ## "Hardware Glitching"
 ![XBOX](images/hardware_glitch.jpg)
