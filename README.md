@@ -2,7 +2,7 @@
 
 I'm fairly well versed with original XBOX and writing home-brew code for it 20 years ago, but I have since not spent much time on the XBOX 360 or XBOX One platforms beyond tons of gaming and I have always been interrested in how exactly the XBOX 360 security was defeated. 
 
-So - here is a hopefully informative write up of my Journey to running unsigned code on a XBOX 360..   Buckle up.. its a long read :)
+So - here is a hopefully informative write up of my Journey to figuring out how these guys were running unsigned code in 2011 on a XBOX 360..   Buckle up.. its a long read :)
 
 ## Original XBOX (Released 2001)
 ![XBOX](images/xbox.jpg)
