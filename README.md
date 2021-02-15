@@ -7,7 +7,7 @@ So - here is a hopefully informative write up of my Journey to figuring out how 
 ## Original XBOX (Released 2001)
 ![XBOX](images/xbox.jpg)
 
-The Original XBOX was released in 2001 and the security of that system was defeated by hardware reverse engineering fairly soon after launch and folks were able to run Linux on the system.  There were MANY mistakes made in the security for the original XBOX, the biggest of them were probably the basic oversights around implementation of very weak and outdated security hashing algorithms. The system saw 6 !hardware revisions through its short 4 year life span and every single one those included fixes to address security flaws and each of those "fixes" were in turn defeated within weeks of release. Today the original XBOX still is one of my favourite systems and I have quite a few of them squirreled away..
+The Original XBOX was released in 2001 and the security of that system was defeated by hardware reverse engineering fairly soon after launch and folks were able to run Linux on the system.  There mistakes made in the security for the original XBOX, the biggest of them were probably the basic oversights around implementation of weak and outdated security encryption algorithms used as hashing algorithms. The system saw 6 hardware revisions through its short 4 year life span and every single one those included fixes to address security flaws and each of those "fixes" were in turn defeated within weeks of release. Today the original XBOX still is one of my favourite systems and I have quite a few of them squirreled away..
 
 ## XBOX 360 (Released 2005)
 ![XBOX](images/xbox_360.jpg)
