@@ -1,6 +1,6 @@
 # Hardware Security Exploit Research - XBOX 360
 
-I'm fairly well versed and have been involved in Original XBOX reverse engineering 20 years ago and have since not spent much time on the XBOX 360 beyond gaming and I have always been interrested in how exactly the XBOX 360 security was defeated. 
+I'm fairly well versed with original XBOX and writing home-brew code for it 20 years ago, but I have since not spent much time on the XBOX 360 or XBOX One platforms beyond tons of gaming and I have always been interrested in how exactly the XBOX 360 security was defeated. 
 
 So - here is a hopefully informative write up of my Journey to running unsigned code on a XBOX 360..   Buckle up.. its a long read :)
 
