@@ -204,7 +204,7 @@ Finally I reached out to some folks on Discord familiar with XBOX 360 RGH (Mena 
 
 There are no built-in IP logic on CPLD's to perform frequency multiplication using Phased Lock Loops (PLL) or Digital Clock Managers (DCM's) or other features you typically get for free in FPGA's..  After some serious Google fu and head scratching, I found an archive on Xilinx Forums on a way to DOUBLE the frequency of a digital circuit by phase delaying the signal a little and then XOR'ing an inverse of the delayed signal with the original and boom! you can double the Frequency!
 
-Super cool tecnique I found on Xiling Forums: https://forums.xilinx.com/t5/General-Technical-Discussion/the-implement-of-frequency-multiplier/m-p/199162/highlight/true#M9312
+Super cool tecnique I found on now defunct Xiling Forums: https://web.archive.org/web/20201215191757/https://forums.xilinx.com/t5/General-Technical-Discussion/the-implement-of-frequency-multiplier/m-p/199162/highlight/true#M9312
 
 ![XBOX](images/freq_doubler_sch.png)
 
